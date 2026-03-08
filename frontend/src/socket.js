@@ -6,4 +6,6 @@ console.log("url",url);
 
 export const socket = io(url,{
     withCredentials:true,
+    autoConnect:false,
+    transports: ["websocket"]
 });

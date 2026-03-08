@@ -5,9 +5,10 @@ import { IoIosSettings } from "react-icons/io";
 
 const SidebarShowcase = ({activeItem,setActiveItem}) => {
   return (
-    <div className="flex h-screen bg-gray-300">
+    <div className="flex h-screen bg-gray-300 border-r border-gray-700">
       <div className="flex flex-col items-center w-18 h-full bg-[#000000] text-gray-400">
 
+        
         <img src={ravenWhite} className="h-14 mt-3 mb-2" onClick={()=>setActiveItem("")}/>
 
         <div className="flex flex-col items-center mt-2">
@@ -43,12 +44,12 @@ const SidebarIcon = ({ children, active, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center w-12 h-12 mt-2 rounded transition-all duration-200
+      className={`flex items-center justify-center w-12 h-12 mt-2 rounded-2xl transition-all duration-200
         ${
           active
-            ? "bg-gray-700 text-white"
+            ? "bg-gray-800 text-white"
             : "hover:bg-gray-700 hover:text-gray-300"
-        }`}
+        } border-1 `}
     >
       {children}
     </button>

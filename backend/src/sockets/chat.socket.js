@@ -31,6 +31,8 @@ const chatSocket = (io) => {
 
   io.on("connection", (socket) => {
     console.log("User connected:", socket.userId);
+    const userId = socket.handshake.query.userId;
+    socket.join(userId); 
     socket.on("join_channel", ({ channelId }) => {
       socket.join(channelId);
       console.log(`Joined channel: ${channelId}`);

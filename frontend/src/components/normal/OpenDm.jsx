@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef,useState } from "react";
 import InputBar from "./InputBar";
 import Message from "./Message";
 import { useDmStore } from "../../store/useDmStore";
@@ -11,146 +11,166 @@ const OpenDm = () => {
   const setActiveDm = useDmStore((state) => state.setActiveDm);
   const messages = useDmStore((state) => state.messages);
   const setMessages = useDmStore((state) => state.setMessages);
- const addMessage = useDmStore((state) => state.addMessage);
-
+  // const addMessage = useDmStore((state) => state.addMessage);
+  // const currentUser=useDmStore((state)=>state.currentUser);
+  const [loading, setLoading] = useState(true);
 
   const bottomRef = useRef(null);
 
-
-
-useEffect(() => {
-  const handleConnect = () => {
-    console.log("Socket connected");
-  };
-
-  const handleDisconnect = () => {
-    console.log("Socket disconnected");
-  };
-
-  socket.on("connect", handleConnect);
-  socket.on("disconnect", handleDisconnect);
-
-  if (socket.connected) {
-    console.log("Socket already connected");
+  useEffect(() => {
+  if (!activeDm?.channelId) {
+    setMessages([]);
+    return;
   }
 
-  return () => {
-    socket.off("connect", handleConnect);
-    socket.off("disconnect", handleDisconnect);
-  };
-}, []);
 
+  const fetchMessages = async () => {
+    try {
+      setLoading(true);
 
-  useEffect(() => {
-    if (!activeDm?.channelId) {
-      setMessages([]);
-      return;
+      const url = import.meta.env.VITE_BACKEND_URL;
+
+      const res = await axios.get(
+        `${url}/message/${activeDm.channelId}`,
+        { withCredentials: true }
+      );
+
+      const data = res.data?.data || res.data || [];
+      setMessages(Array.isArray(data) ? data : []);
+
+    } catch (error) {
+      console.error("Fetch messages error:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const fetchMessages = async () => {
-      try {
-        const url = import.meta.env.VITE_BACKEND_URL;
+  fetchMessages();
+  
+  socket.emit("join_channel", {
+    channelId: activeDm.channelId,
+  });
 
-        const res = await axios.get(
-          `${url}/message/${activeDm.channelId}`,
-          { withCredentials: true }
-        );
-
-        const data = res.data?.data || res.data || [];
-setMessages(Array.isArray(data) ? data : []);
-
-      } catch (error) {
-        console.error("Fetch messages error:", error);
-      }
-    };
-
-    fetchMessages();
-  }, [activeDm?.channelId, setMessages]);
-
-  useEffect(() => {
-    if (!activeDm?.channelId) return;
-
-    socket.emit("join_channel", {
+  return () => {
+    socket.emit("leave_channel", {
       channelId: activeDm.channelId,
     });
-
-    return () => {
-      socket.emit("leave_channel", {
-        channelId: activeDm.channelId,
-      });
-    };
-  }, [activeDm?.channelId]);
-
-
-useEffect(() => {
-  if (!activeDm?.channelId) return;
-
-
-const handleReceive = (message) => {
-  if (message.channelId === activeDm.channelId) {
-    addMessage(message);
-  }
-};
-
-
-  socket.on("receive_message", handleReceive);
-
-  return () => {
-    socket.off("receive_message", handleReceive);
   };
 }, [activeDm?.channelId]);
+  
 
-
-
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+ useEffect(() => {
+  bottomRef.current?.scrollIntoView({ behavior: "auto" });
+}, [messages]);
 
   if (!activeDm) return null;
 
   return (
-    <div className="text-white h-full flex flex-col">
+    <div className="h-full w-full flex justify-center items-center text-white">
 
-      <div className="flex justify-center items-center border-b border-white/10 h-[7%] relative">
-        <img
-          src={activeDm.avatarUrl}
-          className="h-[70%] rounded-full mx-2"
-          alt={activeDm.username}
-        />
-        <h1>{activeDm.username}</h1>
+      {/* GLASS CHAT CONTAINER */}
+      <div
+        className="w-full h-full flex flex-col rounded-2xl
+        bg-white/[0.02]
+        backdrop-blur-[2px]
+        border border-white/10"
+      >
 
-        <IoIosCloseCircleOutline
-          size={25}
-          className="absolute right-5 cursor-pointer"
-          onClick={() => {
-            setActiveDm(null);
-            setMessages([]);
-          }}
-        />
-      </div>
+        {/* HEADER */}
+        <div
+          className="flex items-center justify-between px-6 py-2
+          border-b border-white/10
+          bg-white/[0.01]
+          backdrop-blur-[2px]"
+        >
 
-      <div className="flex-1 overflow-y-auto flex flex-col px-4 py-3">
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-gray-500 text-sm">
-            <p className="text-lg mb-2">No messages yet</p>
-            <p>Start the conversation!</p>
-            <p className="mt-1">Say Hi 👋</p>
+          <div className="flex items-center gap-4">
+
+            <div className="relative">
+              <img
+                src={activeDm.avatarUrl}
+                alt={activeDm.username}
+                className="h-10 w-10 rounded-full object-cover"
+              />
+
+              <span className="absolute bottom-0 right-0 h-3 w-3 bg-green-400 rounded-full border border-black"></span>
+            </div>
+
+            <div>
+              <h1 className="font-semibold text-lg tracking-wide">
+                {activeDm.username}
+              </h1>
+              <p className="text-xs text-gray-300">online</p>
+            </div>
+
           </div>
-        ) : (
-          messages.map((item) => (
-            <Message key={item._id} message={item} />
-          ))
-        )}
 
-        <div ref={bottomRef} />
+          <IoIosCloseCircleOutline
+            size={28}
+            className="cursor-pointer text-gray-300 hover:text-white transition"
+            onClick={() => {
+  socket.emit("leave_channel", {
+    channelId: activeDm.channelId
+  });
+
+  setActiveDm(null);
+  setMessages([]);
+}}
+          />
+
+        </div>
+
+        {/* MESSAGES */}
+        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-4 bg-transparent">
+
+          {loading ? (
+  <div className="flex items-center justify-center h-full text-gray-400">
+    Loading messages...
+  </div>
+) : messages.length === 0 ? (
+  <div className="h-full flex flex-col justify-center items-center text-gray-300">
+
+    <div className="text-5xl mb-4 opacity-60">
+      💬
+    </div>
+
+    <p className="text-lg">No messages yet</p>
+    <p className="text-sm mt-1 text-gray-400">
+      Start the conversation
+    </p>
+
+  </div>
+) : (
+  messages.map((item) => (
+    <Message key={item._id} message={item} />
+  ))
+)}
+          <div ref={bottomRef} />
+
+        </div>
+
+        {/* INPUT */}
+        <div className="px-6 py-3 border-t border-white/10">
+
+          <div
+            className="bg-white/[0.03]
+            backdrop-blur-[3px]
+            border border-white/10
+            rounded-xl
+            p-3"
+          >
+
+            <InputBar />
+
+          </div>
+
+        </div>
+
       </div>
 
-      <div className="h-20 w-full flex justify-center items-center">
-        <InputBar />
-      </div>
     </div>
   );
 };
 
 export default OpenDm;
+

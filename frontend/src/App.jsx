@@ -7,14 +7,42 @@ import Home from './pages/Home'
 import { useEffect } from "react";
 import axios from "axios";
 import { useDmStore } from "./store/useDmStore";
-const router=createBrowserRouter(
-  createRoutesFromElements(<Route path='/'>
-    <Route index  element={<HomePage/>}/>
-    <Route index path='/login' element={<Login/>} />
-    <Route index path='/register' element={<Register/>} />
-    <Route index path='/home' element={<Home/>}/>
-  </Route>)
-)
+import ProtectedRoute from './routes/ProtectedRoute'
+import PublicRoute from './routes/PublicRoute'
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/">
+      <Route index element={<HomePage />} />
+
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+    </Route>
+  )
+);
 const App = () => {
    const setCurrentUser = useDmStore((state) => state.setCurrentUser);
 

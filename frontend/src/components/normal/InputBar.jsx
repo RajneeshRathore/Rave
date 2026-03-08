@@ -27,11 +27,9 @@ const InputBar = () => {
 
   return (
     <div
-      className="h-[70%] w-[90%] rounded-xl 
-      bg-[#1a1a1a]/90 backdrop-blur-md
-      border border-white/10
+      className="rounded-xl 
       flex items-center px-4 justify-between
-      shadow-[0_0_20px_rgba(0,0,0,0.4)]"
+      "
     >
       <input
         type="text"

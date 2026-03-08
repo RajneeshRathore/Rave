@@ -1,7 +1,7 @@
 import React, { useState} from 'react'
 import Logo from '../components/normal/Logo'
 import Particles from '../components/animated/ParticleSpread'
-import { Link,replace,useNavigate } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import axios from 'axios'
 const Register = () => {
   const [email,setEmail]=useState("");

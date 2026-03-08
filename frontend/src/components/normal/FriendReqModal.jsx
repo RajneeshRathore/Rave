@@ -93,7 +93,7 @@ const FriendReqModal = ({ setView }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-[#141414] h-[70%] w-[30%] rounded-lg p-4 relative flex flex-col">
+      <div className="bg-[#141414] h-[70%] w-[60%] rounded-lg p-4 relative flex flex-col">
         <button
           onClick={() => setView(false)}
           className="absolute top-3 right-3 text-white hover:scale-110 transition"
@@ -129,7 +129,7 @@ const FriendReqModal = ({ setView }) => {
 
         <div className="flex-1 overflow-y-auto">
           {activeTab === "send" && (
-            <div className="flex flex-col gap-4 h-full">
+            <div className="flex flex-col pt-5 h-full">
               <input
                 type="text"
                 placeholder="Enter username"
@@ -138,7 +138,7 @@ const FriendReqModal = ({ setView }) => {
                 onChange={(e) => setUsername(e.target.value)}
               />
 
-              <div className="flex-1" />
+              <div className="my-3" />
 
               <button
                 className="bg-green-700/80 text-white py-2 rounded hover:bg-green-800 transition"
@@ -150,9 +150,9 @@ const FriendReqModal = ({ setView }) => {
           )}
 
           {activeTab === "pending" && (
-            <div className="space-y-3">
+            <div className="space-y-3 text-center ">
               {requests.length === 0 ? (
-                <p className="text-gray-400 text-sm">No pending requests</p>
+                <p className="text-gray-400 text-md">No pending requests</p>
               ) : (
                 requests.map((req) => (
                   <div

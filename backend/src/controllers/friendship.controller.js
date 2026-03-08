@@ -4,7 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 import { UserModel } from "../models/user.model.js";
 import { ChannelModel } from "../models/channel.model.js";
-import { ConsoleCallbackHandler } from "@langchain/core/tracers/console";
+
 
 const sendFriendRequest = async (req, res) => {
   const requester = req.user._id;
@@ -61,15 +61,18 @@ const acceptFriendRequest = async (req, res) => {
     });
   }
 
- 
   request.status = "accepted";
   await request.save();
+
+  const io = req.app.get("io");
+
+  io.to(requesterId.toString()).emit("friendAccepted");
+  io.to(currentUserId.toString()).emit("friendAccepted");
 
   return res.json(
     new ApiResponse(200, request, "Friend request accepted")
   );
 };
-
 
 const rejectFriendRequest = async (req, res) => {
   const { requesterId } = req.params;

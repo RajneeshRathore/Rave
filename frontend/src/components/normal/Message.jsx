@@ -2,7 +2,7 @@ import React from "react";
 
 const Message = ({ message }) => {
   return (
-    <div className="flex gap-3 px-4 py-2 hover:bg-zinc-900 transition-colors duration-200">
+    <div className="flex gap-3 px-4 py-2 hover:bg-zinc-900 transition-colors duration-200 rounded-2xl">
       <img
         src={message.sender.avatarUrl}
         alt="avatar"

@@ -21,6 +21,7 @@ const startServer = async () => {
     });
 
     chatSocket(io);
+    app.set("io", io);
     server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
