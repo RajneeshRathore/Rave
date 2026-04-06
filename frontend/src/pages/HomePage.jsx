@@ -7,6 +7,7 @@ import About from '../components/normal/About'
 import Feature from '../components/normal/Feature'
 import Team from '../components/normal/Team'
 import NavBar from '../components/normal/NavBar'
+import Footer from '../components/normal/Footer'
 
 const HomePage = () => {
 
@@ -26,6 +27,7 @@ const HomePage = () => {
       <About />
       <Feature />
       <Team />
+      <Footer />
     </div>
   )
 }

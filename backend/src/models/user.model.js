@@ -28,15 +28,15 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-userSchema.methods.generateRefreshToken = function () {
-  return jwt.sign(
-    {
-        userId: this._id,
-    },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN },
-  );
-}
+// userSchema.methods.generateRefreshToken = function () {
+//   return jwt.sign(
+//     {
+//         userId: this._id,
+//     },
+//     process.env.REFRESH_TOKEN_SECRET,
+//     { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN },
+//   );
+// }
 
 
 const UserModel = mongoose.model("User", userSchema);

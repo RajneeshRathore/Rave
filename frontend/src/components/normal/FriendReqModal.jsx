@@ -92,24 +92,26 @@ const FriendReqModal = ({ setView }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-[#141414] h-[70%] w-[60%] rounded-lg p-4 relative flex flex-col">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-[#09090b]/80 backdrop-blur-3xl h-auto max-h-[85vh] w-[90%] sm:w-[60%] max-w-2xl rounded-3xl p-8 relative flex flex-col border border-white/[0.05] shadow-[0_8px_32px_0_rgba(0,0,0,0.6)]">
         <button
           onClick={() => setView(false)}
-          className="absolute top-3 right-3 text-white hover:scale-110 transition"
+          className="absolute top-5 right-5 text-zinc-500 hover:text-white hover:bg-white/10 rounded-full p-1 transition-all"
         >
-          <IoIosClose size={25} />
+          <IoIosClose size={28} />
         </button>
 
-        <h2 className="text-xl font-bold text-white mb-4">Friend Requests</h2>
+        <h2 className="text-2xl font-black text-white tracking-wide mb-6">
+          Friend Requests
+        </h2>
 
-        <div className="flex border-b border-gray-700 mb-4">
+        <div className="flex border-b border-white/[0.05] mb-6">
           <button
             onClick={() => setActiveTab("send")}
-            className={`flex-1 py-2 text-sm ${
+            className={`flex-1 py-3 text-sm font-semibold tracking-wide transition-all duration-300 ease-out ${
               activeTab === "send"
                 ? "text-white border-b-2 border-white"
-                : "text-gray-400"
+                : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
             Send Request
@@ -117,31 +119,31 @@ const FriendReqModal = ({ setView }) => {
 
           <button
             onClick={() => setActiveTab("pending")}
-            className={`flex-1 py-2 text-sm ${
+            className={`flex-1 py-3 text-sm font-semibold tracking-wide transition-all duration-300 ease-out ${
               activeTab === "pending"
                 ? "text-white border-b-2 border-white"
-                : "text-gray-400"
+                : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
             Pending Requests
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto px-2">
           {activeTab === "send" && (
-            <div className="flex flex-col pt-5 h-full">
+            <div className="flex flex-col pt-8 h-full max-w-md mx-auto w-full">
               <input
                 type="text"
                 placeholder="Enter username"
-                className="px-3 py-2 rounded outline-none border bg-transparent text-white"
+                className="px-5 py-4 rounded-2xl outline-none border border-white/[0.05] bg-white/[0.02] text-zinc-100 focus:border-white/20 focus:bg-white/[0.05] transition-all font-medium placeholder-zinc-500/80 tracking-wide"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
 
-              <div className="my-3" />
+              <div className="my-4" />
 
               <button
-                className="bg-green-700/80 text-white py-2 rounded hover:bg-green-800 transition"
+                className="bg-white/10 hover:bg-white/20 border border-white/10 text-white py-4 rounded-2xl hover:-translate-y-0.5 transition-all active:scale-95 font-semibold tracking-widest uppercase text-sm"
                 onClick={sendFriendReq}
               >
                 Send Request
@@ -150,28 +152,33 @@ const FriendReqModal = ({ setView }) => {
           )}
 
           {activeTab === "pending" && (
-            <div className="space-y-3 text-center ">
+            <div className="space-y-4 pt-2">
               {requests.length === 0 ? (
-                <p className="text-gray-400 text-md">No pending requests</p>
+                <div className="flex flex-col items-center justify-center mt-20 text-zinc-500">
+                  <p className="text-lg font-medium">No pending requests</p>
+                  <p className="text-sm mt-1">You're all caught up!</p>
+                </div>
               ) : (
                 requests.map((req) => (
                   <div
                     key={req._id}
-                    className="flex items-center justify-between bg-[#1e1e1e] p-3 rounded"
+                    className="flex items-center justify-between bg-white/[0.02] border border-white/[0.05] p-4 rounded-2xl shadow-sm hover:bg-white/[0.04] transition-colors"
                   >
-                    <span className="text-white">{req.requester.username}</span>
+                    <span className="text-zinc-200 font-medium text-lg tracking-wide pl-2">
+                      {req.requester.username}
+                    </span>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => handleAccept(req.requester._id)}
-                        className="bg-green-600 px-2 py-1 text-xs rounded"
+                        className="bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30 px-5 py-2 text-sm font-semibold rounded-xl transition-all active:scale-95"
                       >
                         Accept
                       </button>
 
                       <button
                         onClick={() => handleReject(req.requester._id)}
-                        className="bg-red-600 px-2 py-1 text-xs rounded"
+                        className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 px-5 py-2 text-sm font-semibold rounded-xl transition-all active:scale-95"
                       >
                         Reject
                       </button>

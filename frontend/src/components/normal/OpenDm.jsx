@@ -11,6 +11,7 @@ const OpenDm = () => {
   const setActiveDm = useDmStore((state) => state.setActiveDm);
   const messages = useDmStore((state) => state.messages);
   const setMessages = useDmStore((state) => state.setMessages);
+  const onlineUsers = useDmStore((state) => state.onlineUsers);
   // const addMessage = useDmStore((state) => state.addMessage);
   // const currentUser=useDmStore((state)=>state.currentUser);
   const [loading, setLoading] = useState(true);
@@ -68,20 +69,14 @@ const OpenDm = () => {
   return (
     <div className="h-full w-full flex justify-center items-center text-white">
 
-      {/* GLASS CHAT CONTAINER */}
-      <div
-        className="w-full h-full flex flex-col rounded-2xl
-        bg-white/[0.02]
-        backdrop-blur-[2px]
-        border border-white/10"
-      >
+      {/* FLAT CHAT CONTAINER */}
+      <div className="w-full h-full flex flex-col bg-transparent">
 
         {/* HEADER */}
         <div
-          className="flex items-center justify-between px-6 py-2
-          border-b border-white/10
-          bg-white/[0.01]
-          backdrop-blur-[2px]"
+          className="flex items-center justify-between px-6 py-4
+          border-b border-white/[0.05]
+          bg-white/[0.02]"
         >
 
           <div className="flex items-center gap-4">
@@ -90,32 +85,36 @@ const OpenDm = () => {
               <img
                 src={activeDm.avatarUrl}
                 alt={activeDm.username}
-                className="h-10 w-10 rounded-full object-cover"
+                className={`h-10 w-10 rounded-full object-cover transition duration-300 ${!onlineUsers[activeDm._id] && 'opacity-60 grayscale-[50%]'}`}
               />
-
-              <span className="absolute bottom-0 right-0 h-3 w-3 bg-green-400 rounded-full border border-black"></span>
+              {onlineUsers[activeDm._id] && (
+                <span className="absolute bottom-0 right-0 h-3 w-3 bg-green-400 rounded-full border border-black"></span>
+              )}
             </div>
 
             <div>
               <h1 className="font-semibold text-lg tracking-wide">
                 {activeDm.username}
               </h1>
-              <p className="text-xs text-gray-300">online</p>
+              {onlineUsers[activeDm._id] ? (
+                 <p className="text-xs text-green-400">online</p>
+              ) : (
+                 <p className="text-xs text-gray-500">offline</p>
+              )}
             </div>
 
           </div>
 
           <IoIosCloseCircleOutline
             size={28}
-            className="cursor-pointer text-gray-300 hover:text-white transition"
+            className="cursor-pointer text-zinc-500 hover:text-red-400 transition"
             onClick={() => {
-  socket.emit("leave_channel", {
-    channelId: activeDm.channelId
-  });
-
-  setActiveDm(null);
-  setMessages([]);
-}}
+              socket.emit("leave_channel", {
+                channelId: activeDm.channelId
+              });
+              setActiveDm(null);
+              setMessages([]);
+            }}
           />
 
         </div>
@@ -150,20 +149,10 @@ const OpenDm = () => {
         </div>
 
         {/* INPUT */}
-        <div className="px-6 py-3 border-t border-white/10">
-
-          <div
-            className="bg-white/[0.03]
-            backdrop-blur-[3px]
-            border border-white/10
-            rounded-xl
-            p-3"
-          >
-
+        <div className="px-6 py-4 mt-auto">
+          <div className="bg-white/[0.03] backdrop-blur-md rounded-2xl p-1 border border-white/[0.05] focus-within:border-white/20 focus-within:bg-white/[0.05] transition-all duration-300">
             <InputBar />
-
           </div>
-
         </div>
 
       </div>

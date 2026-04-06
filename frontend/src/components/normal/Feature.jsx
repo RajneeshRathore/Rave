@@ -1,79 +1,93 @@
 import React from "react";
 import BlogCard from "./BlogCard";
+
 const Feature = () => {
   return (
-    <div className="w-[100vw] bg-black">
-      <div className="h-screen ">
-        <section className="relative min-h-screen  text-white flex">
-          <div className="hidden md:block w-[60%] h-full"></div>
+    <div className="relative w-full z-10">
 
-          <div className="w-full md:w-[40%] h-full flex items-center justify-center px-6 md:px-0">
-            <div className="max-w-md space-y-6 py-15">
-              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
-                Ultra-Fast Messaging
-              </h1>
+      {/* Section 1 */}
+      <section className="sticky top-0 min-h-screen flex text-white bg-black border-t border-white/[0.05]">
+        <div className="hidden md:flex w-1/2 items-center justify-center p-12">
+           <div className="relative w-full aspect-[4/3] max-w-xl rounded-[2rem] bg-black border border-white/[0.1] overflow-hidden flex items-center justify-center p-8">
+              <div className="w-full h-full bg-white/[0.02] rounded-xl border border-white/10 flex flex-col justify-end p-6 relative">
+                 <div className="absolute top-6 left-6 right-6 flex flex-col gap-4">
+                    <div className="w-3/4 h-12 rounded-xl bg-white/10 self-end"></div>
+                    <div className="w-1/2 h-12 rounded-xl bg-white/5 border border-white/10"></div>
+                    <div className="w-2/3 h-12 rounded-xl bg-white/10 self-end"></div>
+                 </div>
+                 <div className="w-full h-14 rounded-xl bg-white/5 border border-white/10 mt-auto"></div>
+              </div>
+           </div>
+        </div>
 
-              <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-                Built on persistent WebSocket connections for true real-time delivery. Messages are transmitted and acknowledged in under 100ms, even during peak traffic. Optimized for low-bandwidth environments and unstable networks to ensure consistent performance everywhere.
-                <span className="block mt-4 font-semibold text-white">
-                 Feels instant. Because it is.
-                </span>
-              </p>
-            </div>
+        <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 z-10">
+          <div className="max-w-lg space-y-6 py-16">
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
+              Ultra-Fast <br/>Messaging
+            </h1>
+
+            <p className="text-xl text-zinc-400 font-medium leading-relaxed">
+              Built on persistent WebSocket connections for true real-time delivery. No polling, no delays.
+              <span className="block mt-6 text-white text-lg font-bold">
+                Feels instant. Because it is.
+              </span>
+            </p>
           </div>
-        </section>
-      </div>
-      <div className="h-screen ">
-        <section className="relative min-h-screen  text-white flex">
-          
+        </div>
+      </section>
 
-          <div className="w-full md:w-[40%] h-full flex items-center justify-center px-6 md:px-0">
-            <div className="max-w-md space-y-6 py-15">
-              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
-                End-to-End Encryption
-              </h1>
+      {/* Section 2 */}
+      <section className="sticky top-0 min-h-screen flex text-white bg-black border-t border-white/[0.05]">
+        <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 z-10">
+          <div className="max-w-lg space-y-6 py-16">
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
+              End-to-End <br/>Encryption
+            </h1>
 
-              <p className="text-lg md:text-xl text-white/80 leading-relaxed">
-                Your conversations stay private by design. Messages are encrypted on your device before they’re sent, so only you and the people you chat with can read them. Our servers never see message content, private DMs and rooms are fully encrypted.
-                <span className="block mt-4 font-semibold text-white">
-                 Even we can’t read your messages.
-                </span>
-              </p>
-            </div>
+            <p className="text-xl text-zinc-400 font-medium leading-relaxed">
+              Your conversations stay private by design. Robust cryptographic protocols ensure that your messages are locked.
+              <span className="block mt-6 text-white text-lg font-bold">
+                Even we can’t read your messages.
+              </span>
+            </p>
           </div>
-          <div className="hidden md:block w-[60%] h-full"></div>
-        </section>
-      </div>
-      <div className="h-screen flex flex-col items-center justify-center gap-12 bg-black">
-  
-  <div className="text-center">
-    <h2 className="text-4xl font-bold text-white">
-      Built for What Matters
-    </h2>
-    <p className="mt-3 text-white/60">
-      Privacy, performance, and communities without compromises.
-    </p>
-  </div>
+        </div>
 
-  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-    
-    <BlogCard
-      title="Privacy First"
-      description="No data selling. No tracking pixels. No AI training on user chats. Delete your account and all data is removed."
-    />
+        <div className="hidden md:flex w-1/2 items-center justify-center p-12">
+            <div className="relative w-full aspect-square max-w-xl rounded-[2rem] bg-white/[0.02] border border-white/10 flex items-center justify-center">
+               <svg className="w-32 h-32 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+               </svg>
+            </div>
+        </div>
+      </section>
 
-    <BlogCard
-      title="Voice & Media"
-      description="Crystal-clear low-latency voice, noise suppression, push-to-talk, and smooth performance on low-end devices."
-    />
+      {/* Section 3 - Blog Cards */}
+      <section className="sticky top-0 min-h-screen flex flex-col items-center justify-center gap-16 px-6 py-24 text-center text-white bg-black border-t border-white/[0.05]">
+        <div className="max-w-3xl">
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter">
+            Built for What Matters
+          </h2>
+          <p className="mt-6 text-xl text-zinc-400 font-medium">
+            Privacy, performance, and communities without compromises.
+          </p>
+        </div>
 
-    <BlogCard
-      title="Community & Servers"
-      description="Smart servers with role-based permissions, auto-delete channels, expiring invites, and announcement-only rooms."
-    />
-
-  </div>
-</div>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto w-full">
+          <BlogCard
+            title="Privacy First"
+            description="No data selling. No tracking pixels. We believe your communication should be entirely yours. Period."
+          />
+          <BlogCard
+            title="Voice & Media"
+            description="Crystal-clear low-latency voice and high-resolution media sharing integrated seamlessly into the chat."
+          />
+          <BlogCard
+            title="Community Context"
+            description="Smart group management with robust role-based permissions designed for communities of all sizes."
+          />
+        </div>
+      </section>
 
     </div>
   );

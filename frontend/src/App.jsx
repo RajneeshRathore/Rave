@@ -44,15 +44,14 @@ const router = createBrowserRouter(
   )
 );
 const App = () => {
-   const setCurrentUser = useDmStore((state) => state.setCurrentUser);
+  const setCurrentUser = useDmStore((state) => state.setCurrentUser);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const url = import.meta.env.VITE_BACKEND_URL;
-
         const res = await axios.get(`${url}/user/me`, {
-          withCredentials: true,
+          withCredentials: true
         });
 
         setCurrentUser(res.data.data);

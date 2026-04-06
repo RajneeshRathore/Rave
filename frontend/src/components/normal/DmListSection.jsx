@@ -30,18 +30,17 @@ useEffect(() => {
       px-4 py-3
       overflow-y-auto
       bg-transparent
-     
-      border-r border-white/10
-      text-white
+      border-r border-white/[0.05]
+      text-zinc-200
       "
     >
      
-      <div className="mb-3 px-1">
-        <h2 className="text-sm font-bold tracking-wider text-gray-300 uppercase">
-          Friends
+      <div className="mb-4 px-1 group">
+        <h2 className="text-xs font-black tracking-[0.2em] text-white uppercase mt-2">
+          Direct Messages
         </h2>
 
-        <div className="h-[1px] bg-white/10 mt-2"></div>
+        <div className="h-[1px] bg-white/20 mt-3 w-1/2 group-hover:w-full transition-all duration-500"></div>
       </div>
 
       {dms.length === 0 && (

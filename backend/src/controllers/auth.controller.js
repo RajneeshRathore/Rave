@@ -56,7 +56,7 @@ const login = async (req, res) => {
 };
 
 const logout = async (req,res)=>{
-   return res.status(200).clearCookie("accessToken").json(new ApiResponse(200,{},"Logged out successfully"));
+   return res.status(200).clearCookie("accessToken", cookieOptions).json(new ApiResponse(200,{},"Logged out successfully"));
 };
 
 export { register ,login,logout};
