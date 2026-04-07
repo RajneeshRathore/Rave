@@ -1,13 +1,13 @@
-import { UserModel, validateUser ,validateLogin} from "../models/user.model.js";
+import { UserModel, validateUser, validateLogin } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-const cookieOptions={
-  httpOnly:true,
-  secure:false,
+const cookieOptions = {
+  httpOnly: true,
+  secure: false,
   sameSite: "lax",
-  maxAge:15*24*60*60*1000,
+  maxAge: 15 * 24 * 60 * 60 * 1000,
 }
 const generateToken = async (user) => {
   const accessToken = user.generateAccessToken();
@@ -16,7 +16,7 @@ const generateToken = async (user) => {
 
 
 const register = async (req, res) => {
-  const { username, email, password,dob} = req.body;
+  const { username, email, password, dob } = req.body;
   const { error } = validateUser({ username, email, password });
   if (error) throw new ApiError(400, error.details[0].message);
 
@@ -25,11 +25,15 @@ const register = async (req, res) => {
   const existedUserName = await UserModel.findOne({ username });
   if (existedUserName) throw new ApiError(400, "UserName Already Exist");
 
-  const user = await UserModel.create({ username, email, password,dob });
+  const user = await UserModel.create({ username, email, password, dob });
+  
+  const accessToken = await generateToken(user);
   const createdUser = await UserModel.findById(user._id).select("-password");
+  
   return res
     .status(201)
-    .json(new ApiResponse(201,createdUser, "User registered successfully"));
+    .cookie("accessToken", accessToken, cookieOptions)
+    .json(new ApiResponse(201, createdUser, "User registered successfully"));
 };
 
 const login = async (req, res) => {
@@ -47,16 +51,16 @@ const login = async (req, res) => {
 
   if (!isMatch) throw new ApiError(400, "Invalid email or password");
 
-  const accessToken= await generateToken(user);
+  const accessToken = await generateToken(user);
 
   const loggedInUser = await UserModel.findById(user._id).select("-password");
 
   return res.status(200)
-  .cookie("accessToken", accessToken, cookieOptions).json(new ApiResponse(200,loggedInUser, "User logged in successfully"));
+    .cookie("accessToken", accessToken, cookieOptions).json(new ApiResponse(200, loggedInUser, "User logged in successfully"));
 };
 
-const logout = async (req,res)=>{
-   return res.status(200).clearCookie("accessToken", cookieOptions).json(new ApiResponse(200,{},"Logged out successfully"));
+const logout = async (req, res) => {
+  return res.status(200).clearCookie("accessToken", cookieOptions).json(new ApiResponse(200, {}, "Logged out successfully"));
 };
 
-export { register ,login,logout};
+export { register, login, logout };

@@ -1,5 +1,6 @@
 import React from "react";
 import { useDmStore } from "../../store/useDmStore";
+import { optimizeAvatar } from "../../utils/optimizeAvatar";
 
 const Nameplate = ({ item, openDm }) => {
   const onlineUsers = useDmStore((state) => state.onlineUsers);
@@ -20,7 +21,7 @@ const Nameplate = ({ item, openDm }) => {
 
         <div className="relative">
           <img
-            src={item.avatarUrl}
+            src={optimizeAvatar(item.avatarUrl)}
             className="w-10 h-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-white/20 transition-all"
             alt={item.username}
           />

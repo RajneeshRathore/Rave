@@ -1,12 +1,12 @@
 import { Navigate } from "react-router-dom";
 import { useDmStore } from "../store/useDmStore";
 
-const PublicRoute = ({ children }) => {
+const PublicRoute = ({ children, redirectPath = "/home" }) => {
 
   const currentUser = useDmStore((state) => state.currentUser);
 
   if (currentUser) {
-    return <Navigate to="/home" replace />;
+    return <Navigate to={redirectPath} replace />;
   }
 
   return children;

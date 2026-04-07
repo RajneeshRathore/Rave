@@ -1,4 +1,5 @@
 import { ChannelModel } from "../models/channel.model.js";
+import Notification from "../models/notification.model.js";
 import { checkUserOnline } from "../config/redis.js";
 
 const getDmChannels = async (req, res) => {
@@ -20,6 +21,14 @@ const getDmChannels = async (req, res) => {
         const isOnline = await checkUserOnline(member._id.toString());
         return { ...member, isOnline };
       }));
+      
+      // Fetch unread count from MongoDB
+      dmObj.unread = await Notification.countDocuments({
+        channelId: dm._id,
+        recipient: userId,
+        type: 'NEW_MESSAGE'
+      });
+      
       return dmObj;
     }));
 
@@ -30,4 +39,20 @@ const getDmChannels = async (req, res) => {
   }
 };
 
-export {getDmChannels}
+const clearNotifications = async (req, res) => {
+  try {
+    const { channelId } = req.params;
+    const userId = req.user._id;
+
+    await Notification.deleteMany({
+      channelId,
+      recipient: userId
+    });
+
+    res.status(200).json({ message: "Notifications cleared" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { getDmChannels, clearNotifications }

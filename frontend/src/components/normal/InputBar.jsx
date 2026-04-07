@@ -72,7 +72,7 @@ const InputBar = () => {
           className="hover:text-white cursor-pointer transition"
         /> */}
 
-        {/* Send Button */}
+        {/* send msg */}
         <MdSend
           size={22}
           onClick={handleSend}

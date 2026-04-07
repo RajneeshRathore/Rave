@@ -9,6 +9,8 @@ import axios from "axios";
 import { useDmStore } from "./store/useDmStore";
 import ProtectedRoute from './routes/ProtectedRoute'
 import PublicRoute from './routes/PublicRoute'
+import Personalize from './pages/Personalize'
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
@@ -26,9 +28,18 @@ const router = createBrowserRouter(
       <Route
         path="/register"
         element={
-          <PublicRoute>
+          <PublicRoute redirectPath="/personalize">
             <Register />
           </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/personalize"
+        element={
+          <ProtectedRoute>
+            <Personalize />
+          </ProtectedRoute>
         }
       />
 

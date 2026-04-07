@@ -1,4 +1,4 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import DmListSection from "./DmListSection";
 import OpenDm from "./OpenDm";
 import { useDmStore } from "../../store/useDmStore";
@@ -36,7 +36,7 @@ const DmSection = () => {
   }, []);
 
   useEffect(() => {
-      if (!currentUser) return;
+    if (!currentUser) return;
     const fetchDms = async () => {
       try {
         const dms = await getDms();
@@ -48,31 +48,29 @@ const DmSection = () => {
 
     fetchDms();
   }, [currentUser]);
-useEffect(() => {
-  const handleFriendAccepted = async () => {
-    try {
-      const dms = await getDms();
-      setDms(dms);
-    } catch (err) {
-      console.error("Failed to fetch DMs", err);
-    }
-  };
+  useEffect(() => {
+    const handleFriendAccepted = async () => {
+      try {
+        const dms = await getDms();
+        setDms(dms);
+      } catch (err) {
+        console.error("Failed to fetch DMs", err);
+      }
+    };
 
-  socket.on("friendAccepted", handleFriendAccepted);
+    socket.on("friendAccepted", handleFriendAccepted);
 
-  return () => {
-    socket.off("friendAccepted", handleFriendAccepted);
-  };
-}, []);
+    return () => {
+      socket.off("friendAccepted", handleFriendAccepted);
+    };
+  }, []);
 
   return (
     <div className="w-screen h-screen relative bg-[#030305] text-zinc-300 font-sans tracking-wide overflow-hidden">
-      
-      {/* Ambient Radial Glow */}
+
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/[0.03] via-[#030305] to-[#030305] z-0"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-zinc-900/40 via-transparent to-transparent z-0"></div>
 
-      {/* Particles restored for dynamic motion */}
       <div className="absolute inset-0 z-0 opacity-30">
         <Particles
           particleColors={["#ffffff", "#e4e4e7", "#a1a1aa"]}
@@ -89,7 +87,6 @@ useEffect(() => {
 
       <div className="relative z-10 flex h-full p-4 gap-4 xl:p-6 xl:gap-6">
 
-        {/* Premium Glass Panel: List */}
         <div className="
           w-[340px] h-full
           bg-white/[0.015]
@@ -104,7 +101,6 @@ useEffect(() => {
           <DmListSection />
         </div>
 
-        {/* Premium Glass Panel: Chat Area */}
         <div className="
           flex-1 h-full
           bg-white/[0.015]

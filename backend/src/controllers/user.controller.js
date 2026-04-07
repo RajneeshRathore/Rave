@@ -4,7 +4,7 @@ import { UserModel } from "../models/user.model.js";
 
 const getMe = async (req, res) => {
   const user = await UserModel.findById(req.user._id)
-    .select("_id username email avatarUrl createdAt");
+    .select("-password");
 
   res.status(200).json(
     new ApiResponse(200, user, "User profile fetched")
@@ -39,7 +39,7 @@ const updateMe = async (req, res) => {
     req.user._id,
     updates,
     { new: true, runValidators: true }
-  ).select("_id username avatarUrl");
+  ).select("-password");
 
   res.status(200).json(
     new ApiResponse(200, user, "Profile updated")

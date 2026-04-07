@@ -1,10 +1,12 @@
 import Redis from 'ioredis';
 
-// Connect to the local Redis container
-const redisClient = new Redis({
-  host: process.env.REDIS_HOST || '127.0.0.1',
-  port: process.env.REDIS_PORT || 6379,
-});
+// Connect to the local or cloud Redis container
+const redisClient = process.env.REDIS_URL
+  ? new Redis(process.env.REDIS_URL)
+  : new Redis({
+    host: process.env.REDIS_HOST || '127.0.0.1',
+    port: process.env.REDIS_PORT || 6379,
+  });
 
 redisClient.on('connect', () => {
   console.log('Redis Cache Connected');
@@ -63,7 +65,7 @@ export const cacheMessages = async (channelId, page, messagesData) => {
       `channel:${channelId}:messages:page:${page}`,
       JSON.stringify(messagesData),
       'EX',
-      3600 
+      3600
     );
   } catch (err) {
     console.error('Redis cacheMessages error', err);

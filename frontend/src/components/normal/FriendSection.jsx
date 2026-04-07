@@ -14,10 +14,9 @@ const FriendSection = () => {
   const onlineUsers = useDmStore((state) => state.onlineUsers);
   const setActiveDm = useDmStore((state) => state.setActiveDm);
 
-  // Derive Friends list from active DMs
   const friendsList = useMemo(() => {
     if (!currentUser || !dms) return [];
-    
+
     return dms.map(dm => {
       const otherUser = dm.members?.find(m => m._id !== currentUser._id);
       if (!otherUser) return null;
@@ -25,19 +24,16 @@ const FriendSection = () => {
     }).filter(Boolean);
   }, [dms, currentUser]);
 
-  // Filter based on search query
   const filteredFriends = useMemo(() => {
     if (!searchQuery.trim()) return friendsList;
     return friendsList.filter(f => f.username.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [friendsList, searchQuery]);
 
-  // Split into Online and Offline
   const onlineFriends = filteredFriends.filter(f => onlineUsers[f._id]);
   const offlineFriends = filteredFriends.filter(f => !onlineUsers[f._id]);
   return (
     <div className="h-full w-full flex flex-col text-white bg-transparent">
-      
-      {/* HEADER & SEARCH */}
+
       <div className="border-b border-white/[0.05] bg-white/[0.02] flex px-8 py-6 items-center justify-between">
         <div className="w-[40%]">
           <input
@@ -49,7 +45,7 @@ const FriendSection = () => {
           />
         </div>
 
-        <button 
+        <button
           onClick={() => setView(true)}
           className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-4 py-2 rounded-xl hover:-translate-y-0.5 transition-all active:scale-95 font-semibold tracking-wide"
         >
@@ -58,46 +54,45 @@ const FriendSection = () => {
         </button>
       </div>
 
-      {/* FRIEND LIST BODY */}
       <div className="flex-1 overflow-y-auto px-8 py-6 flex flex-col gap-8">
-        
-        {/* ONLINE FRIENDS */}
+
+
         {onlineFriends.length > 0 && (
           <div className="flex flex-col gap-3">
-             <h2 className="text-xs font-black tracking-[0.2em] text-white uppercase">
-                Online — {onlineFriends.length}
-             </h2>
-             <div className="flex flex-col gap-1 w-full max-w-lg">
-                {onlineFriends.map(friend => (
-                  <Nameplate 
-                    key={friend._id} 
-                    item={friend} 
-                    openDm={() => setActiveDm(friend)} 
-                  />
-                ))}
-             </div>
+            <h2 className="text-xs font-black tracking-[0.2em] text-white uppercase">
+              Online — {onlineFriends.length}
+            </h2>
+            <div className="flex flex-col gap-1 w-full max-w-lg">
+              {onlineFriends.map(friend => (
+                <Nameplate
+                  key={friend._id}
+                  item={friend}
+                  openDm={() => setActiveDm(friend)}
+                />
+              ))}
+            </div>
           </div>
         )}
 
-        {/* ALL / OFFLINE FRIENDS */}
+        {/* all friends */}
         {offlineFriends.length > 0 && (
           <div className="flex flex-col gap-3">
-             <h2 className="text-xs font-black tracking-[0.2em] text-zinc-500 uppercase">
-                Offline — {offlineFriends.length}
-             </h2>
-             <div className="flex flex-col gap-1 w-full max-w-lg">
-                {offlineFriends.map(friend => (
-                  <Nameplate 
-                    key={friend._id} 
-                    item={friend} 
-                    openDm={() => setActiveDm(friend)} 
-                  />
-                ))}
-             </div>
+            <h2 className="text-xs font-black tracking-[0.2em] text-zinc-500 uppercase">
+              Offline — {offlineFriends.length}
+            </h2>
+            <div className="flex flex-col gap-1 w-full max-w-lg">
+              {offlineFriends.map(friend => (
+                <Nameplate
+                  key={friend._id}
+                  item={friend}
+                  openDm={() => setActiveDm(friend)}
+                />
+              ))}
+            </div>
           </div>
         )}
 
-        {/* EMPTY STATE */}
+        {/* no friends */}
         {filteredFriends.length === 0 && (
           <div className="flex flex-col items-center justify-center mt-20 text-zinc-500">
             <p className="text-lg font-medium">No friends found</p>

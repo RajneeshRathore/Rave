@@ -10,7 +10,7 @@ export const useDmStore = create((set) => ({
   setCurrentUser: (user) => set({ currentUser: user }),
 
   setDms: (dms) => set((state) => {
-    // Extract online statuses from the fresh DMs payload into a global map
+    // extract online details for new dms and put into map
     const newOnlineMap = { ...state.onlineUsers };
     if (Array.isArray(dms)) {
       dms.forEach(dm => {
@@ -27,11 +27,11 @@ export const useDmStore = create((set) => ({
   })),
 
   setActiveDm: (dm) => set((state) => {
-    // If dm is null, just close the channel window explicitly
+    // if dm is null  close the channel window
     if (!dm) return { activeDm: null };
 
-    // Reset unread count when opening a DM channel
-    const updatedDms = state.dms.map(d => 
+    // reset unread when open dm
+    const updatedDms = state.dms.map(d =>
       String(d._id) === String(dm.channelId) ? { ...d, unread: 0 } : d
     );
     return { activeDm: dm, dms: updatedDms };
@@ -43,29 +43,28 @@ export const useDmStore = create((set) => ({
     }),
 
   addMessage: (message) => set((state) => {
-    // Check if the incoming message belongs to our currently active chatting channel
+    // check incoming msg belong to current dm 
     const isActive = state.activeDm && String(state.activeDm.channelId) === String(message.channelId);
 
-    // Update unread count AND move the active channel to the top of the DMs list!
+    //update msg cound and move active channel to top of list
     const updatedDms = [];
     state.dms.forEach(d => {
       if (String(d._id) === String(message.channelId)) {
-        // Target channel gets updated unread count and moved to top! (unshift)
         updatedDms.unshift({ ...d, unread: isActive ? 0 : (d.unread || 0) + 1 });
       } else {
-        // Other channels stay in their normal order
+        // other channels stay in their place
         updatedDms.push(d);
       }
     });
 
-    // Only append to the screen if the user is actually looking at that DM
-    const newMessages = isActive 
-        ? (Array.isArray(state.messages) ? [...state.messages, message] : [message])
-        : state.messages;
+    // append to the screen if the dm is opened
+    const newMessages = isActive
+      ? (Array.isArray(state.messages) ? [...state.messages, message] : [message])
+      : state.messages;
 
-    return { 
+    return {
       dms: updatedDms,
-      messages: newMessages 
+      messages: newMessages
     };
   })
 }));

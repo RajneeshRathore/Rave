@@ -3,6 +3,14 @@ import { Kafka } from 'kafkajs';
 const kafka = new Kafka({
   clientId: 'messaging-app-backend',
   brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
+  ...(process.env.KAFKA_USERNAME && {
+    ssl: { rejectUnauthorized: false },
+    sasl: {
+      mechanism: process.env.KAFKA_SASL_MECHANISM || 'plain',
+      username: process.env.KAFKA_USERNAME,
+      password: process.env.KAFKA_PASSWORD,
+    },
+  }),
 });
 
 const producer = kafka.producer();
@@ -14,6 +22,15 @@ let producerConnected = false;
 export const connectProducer = async () => {
   if (producerConnected) return;
   try {
+    const admin = kafka.admin();
+    await admin.connect();
+    await admin.createTopics({
+      topics: [{ topic: 'chat-messages', numPartitions: 1 }],
+      waitForLeaders: true,
+    });
+    console.log('Kafka Admin verified topics');
+    await admin.disconnect();
+
     await producer.connect();
     producerConnected = true;
     console.log('Kafka Producer Connected');
@@ -41,3 +58,4 @@ export const publishMessageEvent = async (messageData) => {
 };
 
 export const getKafkaConsumer = () => consumer;
+export { kafka };

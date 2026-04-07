@@ -1,4 +1,4 @@
-import { getKafkaConsumer } from '../config/kafka.js';
+import { getKafkaConsumer, kafka } from '../config/kafka.js';
 import { checkUserOnline } from '../config/redis.js';
 import Notification from '../models/notification.model.js';
 import { ChannelModel } from '../models/channel.model.js';
@@ -7,6 +7,15 @@ import mongoose from 'mongoose';
 export const startKafkaWorker = async () => {
   const consumer = getKafkaConsumer();
   try {
+    const admin = kafka.admin();
+    await admin.connect();
+    await admin.createTopics({
+      topics: [{ topic: 'chat-messages', numPartitions: 1 }],
+      waitForLeaders: true,
+    });
+    console.log('Kafka Admin verified topics');
+    await admin.disconnect();
+
     await consumer.connect();
     console.log('Kafka Worker Connected');
     await consumer.subscribe({ topic: 'chat-messages', fromBeginning: false });
@@ -30,7 +39,7 @@ export const startKafkaWorker = async () => {
             const isOnline = await checkUserOnline(memberId.toString());
             if (!isOnline) {
               console.log(`[Kafka Worker] User ${memberId} is offline. Creating notification.`);
-              
+
               // Persist a notification since the user is offline
               await Notification.create({
                 recipient: memberId,

@@ -1,5 +1,6 @@
 import React from "react";
 import { useDmStore } from "../../store/useDmStore";
+import { optimizeAvatar } from "../../utils/optimizeAvatar";
 
 const Message = ({ message }) => {
   const currentUser = useDmStore((state) => state.currentUser);
@@ -12,7 +13,7 @@ const Message = ({ message }) => {
         : "mr-auto bg-white/[0.03] backdrop-blur-md border border-white/[0.05]"
     } transition-all duration-300 hover:scale-[1.01]`}>
       <img
-        src={message.sender.avatarUrl}
+        src={optimizeAvatar(message.sender.avatarUrl)}
         alt="avatar"
         className="w-10 h-10 rounded-full object-cover"
       />
@@ -22,7 +23,7 @@ const Message = ({ message }) => {
             {message.sender.username}
           </span>
 
-          <span className={`text-xs h-full ${isOwnMessage ? 'text-zinc-400' : 'text-zinc-500'}`}>
+          <span className={`text-xs h-full whitespace-nowrap ${isOwnMessage ? 'text-zinc-400' : 'text-zinc-500'}`}>
             {new Date(message.createdAt).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",

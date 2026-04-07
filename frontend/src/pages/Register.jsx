@@ -3,7 +3,10 @@ import Logo from '../components/normal/Logo'
 import Silk from '../components/animated/Silk'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useDmStore } from '../store/useDmStore'
+
 const Register = () => {
+  const setCurrentUser = useDmStore((state) => state.setCurrentUser);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +28,14 @@ const Register = () => {
           username,
           password,
           dob,
-        }
+        },
+        { withCredentials: true }
       );
 
       console.log("Register success:", res.data);
-      alert("Account created successfully!");
-      navigate('/login', { replace: true })
+      // Batch these updates without blocking `alert` so React Router resolves directly to ProtectedRoute
+      setCurrentUser(res.data.data);
+      navigate('/personalize', { replace: true });
     } catch (error) {
       console.error("Register error:", error.response?.data || error.message);
       alert(error.response?.data?.message || "Registration failed");

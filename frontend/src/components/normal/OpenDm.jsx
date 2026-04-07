@@ -5,6 +5,7 @@ import { useDmStore } from "../../store/useDmStore";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import axios from "axios";
 import { socket } from "../../socket";
+import { optimizeAvatar } from "../../utils/optimizeAvatar";
 
 const OpenDm = () => {
   const activeDm = useDmStore((state) => state.activeDm);
@@ -43,6 +44,14 @@ const OpenDm = () => {
       console.error("Fetch messages error:", error);
     } finally {
       setLoading(false);
+    }
+
+    // Clear notifications in the backend since user just viewed the channel
+    try {
+      const url = import.meta.env.VITE_BACKEND_URL;
+      await axios.delete(`${url}/channel/notifications/${activeDm.channelId}`, { withCredentials: true });
+    } catch (err) {
+      console.error("Failed to clear notifications:", err);
     }
   };
 
@@ -83,7 +92,7 @@ const OpenDm = () => {
 
             <div className="relative">
               <img
-                src={activeDm.avatarUrl}
+                src={optimizeAvatar(activeDm.avatarUrl)}
                 alt={activeDm.username}
                 className={`h-10 w-10 rounded-full object-cover transition duration-300 ${!onlineUsers[activeDm._id] && 'opacity-60 grayscale-[50%]'}`}
               />
