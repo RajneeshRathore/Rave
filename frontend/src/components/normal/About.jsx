@@ -1,4 +1,5 @@
 import React from 'react'
+import mockupImg from '../../assets/chat_app_mockup.png'
 
 const About = () => {
   return (
@@ -33,7 +34,7 @@ const About = () => {
       <div className="hidden md:flex w-1/2 h-full items-center justify-center p-12 relative">
          <div className="relative w-full aspect-square max-w-2xl rounded-[2rem] bg-white/[0.02] border border-white/10 overflow-hidden flex items-center justify-center">
            <img 
-              src="/src/assets/chat_app_mockup.png" 
+              src={mockupImg} 
               className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-lighten grayscale hover:grayscale-0 transition-all duration-700"
               alt="App Interface" 
            />
