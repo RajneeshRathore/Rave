@@ -31,4 +31,9 @@ app.use('/friend',friendRoute);
 app.use('/message',messageRoute);
 app.use('/channel',channelRoute);
 
+// Health check route for cloud deployment monitoring
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', timestamp: new Date(), message: 'Server is healthy and running' });
+});
+
 export default app;
