@@ -63,7 +63,8 @@ const Personalize = () => {
       navigate("/home", { replace: true });
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Failed to upload avatar. Please try again.");
+      const serverMessage = error.response?.data?.error?.message || error.response?.data?.message || "";
+      alert(`Failed to upload avatar: ${serverMessage || error.message}`);
     } finally {
       setIsLoading(false);
     }
