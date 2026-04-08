@@ -5,8 +5,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: false,
-  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   maxAge: 15 * 24 * 60 * 60 * 1000,
 }
 const generateToken = async (user) => {

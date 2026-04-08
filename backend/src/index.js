@@ -9,6 +9,7 @@ import messageRoute from './routes/message.route.js'
 import channelRoute from './routes/channel.route.js'
 
 const app = express();
+app.set("trust proxy", 1); // Trust reverse proxy to allow secure cookies
 
 app.use((req,res,next)=>{
     console.log("Request: ",req.method,req.url);
