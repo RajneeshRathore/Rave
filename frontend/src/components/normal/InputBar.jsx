@@ -39,65 +39,66 @@ const InputBar = () => {
 
   // 🔥 Upload + Send
   const handleSend = async () => {
-    if (!content.trim() && files.length === 0) return;
+  if (!content.trim() && files.length === 0) return;
+  if (!activeDm?.channelId) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    let attachments = [];
+  try {
+    const uploadPromises = files.map(async (item) => {
+      const formData = new FormData();
+      formData.append("file", item.file);
+      formData.append("upload_preset", "chat_app_uploads");
 
-    try {
-      // 🔹 Upload all files
-      for (let item of files) {
-        const formData = new FormData();
-        formData.append("file", item.file);
-        formData.append("upload_preset", "chat_app_uploads");
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-        const res = await fetch(
-          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/auto/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+      if (!res.ok) throw new Error("Upload failed");
 
-        const data = await res.json();
+      const data = await res.json();
 
-        attachments.push({
-          url: data.secure_url,
-          type: data.resource_type,
-        });
-      }
+      return {
+        url: data.secure_url,
+        type: data.resource_type,
+        fileName: item.file.name,
+        size: item.file.size,
+      };
+    });
 
-      // 🔹 Send message
-      socket.emit("send_message", {
-        channelId: activeDm.channelId,
-        content,
-        attachment: attachments.length > 0 ? attachments : null,
-      });
+    const attachments = await Promise.all(uploadPromises);
+    console.log("Attachments uploaded:", attachments);
 
-      // reset
-      setContent("");
-      files.forEach((f) => URL.revokeObjectURL(f.preview));
-      setFiles([]);
 
-      fileInputRef.current.value = null;
+    socket.emit("send_message", {
+      channelId: activeDm.channelId,
+      content,
+      attachment: attachments,
+    });
 
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setContent("");
+    files.forEach((f) => URL.revokeObjectURL(f.preview));
+    setFiles([]);
+    fileInputRef.current.value = null;
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="px-4 py-2 border-t border-zinc-800">
-
       {/* 🔥 Preview Grid */}
       {files.length > 0 && (
         <div className="grid grid-cols-3 gap-2 mb-3">
           {files.map((item, index) => (
             <div key={index} className="relative">
-              
               {/* Preview */}
               {item.file.type.startsWith("image") ? (
                 <img
@@ -129,7 +130,6 @@ const InputBar = () => {
 
       {/* Input Row */}
       <div className="flex items-center gap-3">
-
         <input
           type="text"
           placeholder="Message..."
