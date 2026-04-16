@@ -6,6 +6,8 @@ const Message = ({ message }) => {
   const currentUser = useDmStore((state) => state.currentUser);
   const isOwnMessage = currentUser?._id === message.sender._id;
 
+  //console.log("info log: ",message);
+
   return (
     <div className={`flex gap-3 px-4 py-3 rounded-2xl w-fit max-w-[85%] ${
       isOwnMessage 
@@ -37,10 +39,10 @@ const Message = ({ message }) => {
           </p>
         )}
 
-        {message.attachment && (
+        {message.attachment[0] && (
           <div className="mt-2">
             <img
-              src={message.attachment}
+              src={message.attachment[0].url}
               alt="attachment"
               className="rounded-lg max-h-72 object-cover border border-zinc-800 shadow-md hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
             />

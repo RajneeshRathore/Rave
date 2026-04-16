@@ -38,7 +38,7 @@ const dmMessageSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    attachments: [String],
+    attachments: [attachmentSchema], // ✅ FIXED
     seenBy: [
       {
         type: mongoose.Schema.Types.ObjectId,
