@@ -1,29 +1,41 @@
+version: "3.8"
+
 services:
-  # 1. Redis Setup
+  # 🔴 Redis
   redis:
     image: redis:latest
     container_name: local-redis
     ports:
-      # Maps local port 6379 to container port 6379
       - "6379:6379"
     restart: always
 
-  # 2. Kafka Setup (Using Apache's KRaft mode, which skips needing Zookeeper)
+  # 🟡 Kafka (KRaft mode - no Zookeeper)
   kafka:
     image: apache/kafka:latest
     container_name: local-kafka
     ports:
-      # Maps local port 9092 to container port 9092
       - "9092:9092"
       - "9093:9093"
     environment:
-      # Configuration for Kafka node and listeners
-      - KAFKA_NODE_ID=1
-      - KAFKA_PROCESS_ROLES=broker,controller
-      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
-      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      # Basic KRaft setup
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+
+      # Listeners
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9092
+
+      # Protocol mapping
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+
+      # Controller config
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # Replication (single node)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+      # Optional but useful
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
     restart: always
