@@ -39,15 +39,15 @@ const Message = ({ message }) => {
           </p>
         )}
 
-        {message.attachment[0] && (
-          <div className="mt-2">
+        {message.attachment.map((attachment, index) => (
+          <div className="mt-2" key={index}>
             <img
-              src={message.attachment[0].url}
+              src={attachment.url}
               alt="attachment"
               className="rounded-lg max-h-72 object-cover border border-zinc-800 shadow-md hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
             />
           </div>
-        )}
+        ))}
       </div>
     </div>
   );
